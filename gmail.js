@@ -16,7 +16,7 @@ const openai = new OpenAI({
 });
 
 const credentials = JSON.parse(process.env.GMAIL_CREDENTIALS_JSON);
-authorize(credentials, checkGmail);
+authorize(credentials);
 
 function authorize(credentials) {
     const { client_secret, client_id } = credentials.installed;
@@ -27,26 +27,24 @@ function authorize(credentials) {
     );
 
     // Check for existing token
-    if (fs.existsSync(TOKEN_PATH)) {
-        const token = JSON.parse(process.env.GMAIL_TOKEN_JSON);
-        oAuth2Client.setCredentials(JSON.parse(token));
-        startPolling(oAuth2Client);
-        return;
-    }
+    const token = JSON.parse(process.env.GMAIL_TOKEN_JSON);
+    oAuth2Client.setCredentials(JSON.parse(token));
+    startPolling(oAuth2Client);
+    return;
 
-    const authUrl = oAuth2Client.generateAuthUrl({ access_type: "offline", scope: SCOPES });
-    console.log("Authorize this app by visiting this url:", authUrl);
+    // const authUrl = oAuth2Client.generateAuthUrl({ access_type: "offline", scope: SCOPES });
+    // console.log("Authorize this app by visiting this url:", authUrl);
 
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-    rl.question("Enter the code from that page here: ", (code) => {
-        rl.close();
-        oAuth2Client.getToken(code, (err, token) => {
-            if (err) return console.error("Error retrieving token", err);
-            oAuth2Client.setCredentials(token);
-            fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
-            startPolling(oAuth2Client);
-        });
-    });
+    // const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    // rl.question("Enter the code from that page here: ", (code) => {
+    //     rl.close();
+    //     oAuth2Client.getToken(code, (err, token) => {
+    //         if (err) return console.error("Error retrieving token", err);
+    //         oAuth2Client.setCredentials(token);
+    //         fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
+    //         startPolling(oAuth2Client);
+    //     });
+    // });
 }
 
 function startPolling(auth) {
