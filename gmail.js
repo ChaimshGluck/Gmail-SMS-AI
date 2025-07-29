@@ -100,7 +100,6 @@ function checkGmail(auth) {
                 const subject = subjectHeader ? subjectHeader.value : "No Subject";
 
                 // Prepare raw email message
-                const replyTo = "9176278846@vzwpix.com";
                 const rawMessage = makeReplyMessage(replyTo, subject, aiReply, msgData.data.threadId);
 
                 // Send the reply
