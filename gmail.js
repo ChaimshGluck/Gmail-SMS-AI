@@ -149,6 +149,11 @@ function makeReplyMessage(to, subject, message, threadId) {
 }
 
 async function getAIResponse(email, newUserMessage) {
+    const historyFilePath = './conversationStore.json';
+
+    if (!fs.existsSync(historyFilePath) || fs.readFileSync(historyFilePath, 'utf8').trim() === '') {
+        fs.writeFileSync(historyFilePath, '{}');
+    }
     const history = getHistory(email);
 
     // Add new user message
