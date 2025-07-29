@@ -148,10 +148,34 @@ function makeReplyMessage(to, subject, message, threadId) {
         .replace(/=+$/, '');
 }
 
-async function getAIResponse(question) {
-    const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: question }],
+async function getAIResponse(email, newUserMessage) {
+    const history = getHistory(email);
+
+    // Add new user message
+    history.push({ role: "user", content: newUserMessage });
+
+    const res = await openai.chat.completions.create({
+        model: "gpt-4",
+        messages: history,
     });
-    return completion.choices[0].message.content;
+
+    const reply = res.choices[0].message.content;
+
+    // Save AI reply
+    saveMessage(email, "user", newUserMessage);
+    saveMessage(email, "assistant", reply);
+
+    return reply;
+}
+
+function getHistory(email) {
+    const data = JSON.parse(fs.readFileSync('conversationStore.json', 'utf8'));
+    return data[email] || [];
+}
+
+function saveMessage(email, role, content) {
+    const data = JSON.parse(fs.readFileSync('conversationStore.json', 'utf8'));
+    if (!data[email]) data[email] = [];
+    data[email].push({ role, content });
+    fs.writeFileSync('conversationStore.json', JSON.stringify(data, null, 2));
 }
