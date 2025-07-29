@@ -93,7 +93,7 @@ function checkGmail(auth) {
                 const question = msgData.data.snippet; // or extract full message body if you want
                 if (!msgData.data.snippet.startsWith("AI")) return;
 
-                const aiReply = await getAIResponse(question);
+                const aiReply = await getAIResponse(question, senderEmail);
 
                 // Get original subject or use a default
                 const subjectHeader = headers.find(h => h.name === "Subject");
@@ -148,7 +148,7 @@ function makeReplyMessage(to, subject, message, threadId) {
         .replace(/=+$/, '');
 }
 
-async function getAIResponse(email, newUserMessage) {
+async function getAIResponse(newUserMessage, email) {
     if (!newUserMessage || typeof newUserMessage !== 'string' || !newUserMessage.trim()) {
         console.error("Empty or invalid user message.");
         return "Sorry, I didn't catch that.";
