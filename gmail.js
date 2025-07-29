@@ -15,10 +15,8 @@ const openai = new OpenAI({
     apiKey: process.env.OPEN_AI_KEY
 });
 
-fs.readFile("credentials.json", (err, content) => {
-    if (err) return console.log("Error loading client secret file:", err);
-    authorize(JSON.parse(content), checkGmail);
-});
+const credentials = JSON.parse(process.env.GMAIL_CREDENTIALS_JSON);
+authorize(credentials, checkGmail);
 
 function authorize(credentials) {
     const { client_secret, client_id } = credentials.installed;
@@ -30,7 +28,7 @@ function authorize(credentials) {
 
     // Check for existing token
     if (fs.existsSync(TOKEN_PATH)) {
-        const token = fs.readFileSync(TOKEN_PATH);
+        const token = JSON.parse(process.env.GMAIL_TOKEN_JSON);
         oAuth2Client.setCredentials(JSON.parse(token));
         startPolling(oAuth2Client);
         return;
