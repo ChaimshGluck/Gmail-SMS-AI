@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import readline from 'readline';
 import { google } from "googleapis";
 import OpenAI from "openai";
+import 'dotenv/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
