@@ -8,6 +8,11 @@ import 'dotenv/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const tmpDir = path.join(__dirname, "tmp");
+
+if (!fs.existsSync(tmpDir)) {
+    fs.mkdirSync(tmpDir, { recursive: true });
+}
 
 const SCOPES = ["https://www.googleapis.com/auth/gmail.modify"];
 const TOKEN_PATH = path.join(__dirname, "token.json");
