@@ -94,7 +94,7 @@ function checkGmail(auth) {
                 console.log(`found message from ${senderEmail}, replying...`);
 
                 const question = msgData.data.snippet; // or extract full message body if you want
-                if (!msgData.data.snippet.staretsWith("AI")) return;
+                if (!msgData.data.snippet.startsWith("AI")) return;
 
                 const aiReply = await getAIResponse(question);
 
