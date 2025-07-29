@@ -149,7 +149,7 @@ function makeReplyMessage(to, subject, message, threadId) {
 
 async function getAIResponse(newUserMessage, email) {
     if (!newUserMessage || typeof newUserMessage !== 'string' || !newUserMessage.trim()) {
-        console.error("Empty or invalid user message.");
+        console.error("Empty or invalid user message.", newUserMessage);
         return "Sorry, I didn't catch that.";
     }
     const historyFilePath = './conversationStore.json';
