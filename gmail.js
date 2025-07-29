@@ -149,6 +149,10 @@ function makeReplyMessage(to, subject, message, threadId) {
 }
 
 async function getAIResponse(email, newUserMessage) {
+    if (!newUserMessage || typeof newUserMessage !== 'string' || !newUserMessage.trim()) {
+        console.error("Empty or invalid user message.");
+        return "Sorry, I didn't catch that.";
+    }
     const historyFilePath = './conversationStore.json';
 
     if (!fs.existsSync(historyFilePath) || fs.readFileSync(historyFilePath, 'utf8').trim() === '') {
@@ -174,8 +178,21 @@ async function getAIResponse(email, newUserMessage) {
 }
 
 function getHistory(email) {
-    const data = JSON.parse(fs.readFileSync('conversationStore.json', 'utf8'));
-    return data[email] || [];
+    const raw = fs.readFileSync('conversationStore.json', 'utf8');
+    let data;
+    try {
+        data = JSON.parse(raw);
+    } catch (err) {
+        console.error("Failed to parse conversationStore.json:", err);
+        return [];
+    }
+
+    const history = data[email] || [];
+
+    // Filter out any invalid messages
+    return history.filter(
+        m => m && typeof m.content === 'string' && m.content.trim() !== ''
+    );
 }
 
 function saveMessage(email, role, content) {
