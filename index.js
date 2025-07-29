@@ -1,12 +1,13 @@
-import express from 'express';
-const app = express();
+import express from "express";
+import "./gmail.js"; // runs your background polling logic
 
-app.get('/', async (req, res) => {
-    const code = req.query.code;
-    // Exchange code for token here...
-    res.send('Authorization successful! You may close this window.');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get("/", (_, res) => {
+    res.send("Gmail AI Bot is running.");
 });
 
-app.listen(3000, () => {
-    console.log('Listening on http://localhost:3000');
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
 });
