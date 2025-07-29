@@ -28,7 +28,7 @@ function authorize(credentials) {
 
     // Check for existing token
     const token = JSON.parse(process.env.GMAIL_TOKEN_JSON);
-    oAuth2Client.setCredentials(JSON.parse(token));
+    oAuth2Client.setCredentials(token);
     startPolling(oAuth2Client);
     return;
 
