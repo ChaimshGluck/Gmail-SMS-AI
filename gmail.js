@@ -153,7 +153,7 @@ async function getAIResponse(newUserMessage, email) {
         console.error("Empty or invalid user message.", newUserMessage);
         return "Sorry, I didn't catch that.";
     }
-    const historyFilePath = './conversationStore.json';
+    const historyFilePath = './tmp/conversationStore.json';
 
     if (!fs.existsSync(historyFilePath) || fs.readFileSync(historyFilePath, 'utf8').trim() === '') {
         fs.writeFileSync(historyFilePath, '{}');
@@ -178,7 +178,7 @@ async function getAIResponse(newUserMessage, email) {
 }
 
 function getHistory(email) {
-    const raw = fs.readFileSync('conversationStore.json', 'utf8');
+    const raw = fs.readFileSync('./tmp/conversationStore.json', 'utf8');
     let data;
     try {
         data = JSON.parse(raw);
@@ -196,8 +196,8 @@ function getHistory(email) {
 }
 
 function saveMessage(email, role, content) {
-    const data = JSON.parse(fs.readFileSync('conversationStore.json', 'utf8'));
+    const data = JSON.parse(fs.readFileSync('./tmp/conversationStore.json', 'utf8'));
     if (!data[email]) data[email] = [];
     data[email].push({ role, content });
-    fs.writeFileSync('conversationStore.json', JSON.stringify(data, null, 2));
+    fs.writeFileSync('./tmp/conversationStore.json', JSON.stringify(data, null, 2));
 }
